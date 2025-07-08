@@ -1,9 +1,10 @@
 #include "gd32h7xx.h"
-#include <stdio.h>
 
 /* FreeRTOS includes */
 #include "FreeRTOS.h"
 #include "task.h"
+
+#include "main.h"
 
 void cache_enable(void);
 void mpu_config(void);
@@ -15,6 +16,13 @@ void vTask2_Print_Counter(void *pvParameters);
 /* Task handles */
 TaskHandle_t xTask1Handle = NULL;
 TaskHandle_t xTask2Handle = NULL;
+
+
+task_info_t task_info_all[] = {
+    {task_test,"test",TASK_stack_depth_test,5000,3,&pTask_test},
+};
+
+#define TASK_NUM (sizeof(task_info_all) / sizeof(task_info_t))
 
 
 /*!
@@ -29,21 +37,17 @@ int main(void)
     cache_enable();
     mpu_config();
     
+	for (int i = 0; i < TASK_NUM; i++)
+	{
 
-    xTaskCreate(vTask1_LED_Toggle,           /* Task function */
-                         "LED_Task",                   /* Task name */
-                         configMINIMAL_STACK_SIZE,     /* Stack size */
-                         NULL,                         /* Parameters */
-                         3,                            /* Priority */
-                         &xTask1Handle);               /* Task handle */
-    
-    xTaskCreate(vTask2_Print_Counter,        /* Task function */
-                         "Print_Task",                 /* Task name */
-                         configMINIMAL_STACK_SIZE,     /* Stack size */
-                         NULL,                         /* Parameters */
-                         4,                            /* Priority (lower than Task1) */
-                         &xTask2Handle);               /* Task handle */
-	
+		xTaskCreate(task_info_all[i].pxTaskCode, 
+            task_info_all[i].pcName, 
+            task_info_all[i].uxStackDepth, 
+            &task_info_all[i].time, 
+            task_info_all[i].uxPriority, 
+            task_info_all[i].pxCreatedTask);
+	}
+
 	vTaskStartScheduler();
     while(1);
 }
@@ -96,46 +100,6 @@ void mpu_config(void)
 
     /* enable the MPU */
     ARM_MPU_Enable(MPU_MODE_PRIV_DEFAULT);
-}
-
-/*!
-    \brief      FreeRTOS Task 1: LED Toggle Task
-    \param[in]  pvParameters: task parameters
-    \param[out] none
-    \retval     none
-*/
-void vTask1_LED_Toggle(void *pvParameters)
-{
-	static uint32_t led_counter = 0; 
-    for(;;)
-    {
-        /* Toggle LED simulation - in real hardware, you would toggle actual LED */
-        led_counter++;
-        
-        /* Wait for the next cycle (500ms) */
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-}
-
-/*!
-    \brief      FreeRTOS Task 2: Print Counter Task  
-    \param[in]  pvParameters: task parameters
-    \param[out] none
-    \retval     none
-*/
-void vTask2_Print_Counter(void *pvParameters)
-{
-    static uint32_t print_counter = 0;
-
-
-    
-    for(;;)
-    {
-        /* Print counter */
-        print_counter++;
-    
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
 }
 
 #if 0
