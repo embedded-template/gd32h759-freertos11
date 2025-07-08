@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\freeRtos\kernel\include;..\freeRtos\kernel\portable\GCC\ARM_CM7\r0p1;..\lib\Firmware\CMSIS\GD\GD32H7xx\Include;..\lib\Firmware\GD32H7xx_standard_peripheral\Include;..\app</IncludePath>
+              <IncludePath>..\freeRtos\kernel\include;..\freeRtos\kernel\portable\GCC\ARM_CM7\r0p1;..\lib\Firmware\CMSIS\GD\GD32H7xx\Include;..\lib\Firmware\GD32H7xx_standard_peripheral\Include;..\app;..\lib\ring_buff</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
