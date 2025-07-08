@@ -19,7 +19,8 @@ TaskHandle_t xTask2Handle = NULL;
 
 
 task_info_t task_info_all[] = {
-    {task_test,"test",TASK_stack_depth_test,5000,3,&pTask_test},
+    {task_test,"test",TASK_stack_depth_test,TASK_param_test,TASK_priority_test,&pTask_test},
+    {Task_UART1_Debug,"test1",TASK_stack_depth_uart1,TASK_param_uart1,TASK_priority_uart1,&pTask_debug},
 };
 
 #define TASK_NUM (sizeof(task_info_all) / sizeof(task_info_t))
@@ -102,26 +103,6 @@ void mpu_config(void)
     ARM_MPU_Enable(MPU_MODE_PRIV_DEFAULT);
 }
 
-#if 0
-#ifdef GD_ECLIPSE_GCC
-/* retarget the C library printf function to the USART, in Eclipse GCC environment */
-int __io_putchar(int ch)
-{
-    usart_data_transmit(EVAL_COM, (uint8_t) ch );
-    while(RESET == usart_flag_get(EVAL_COM, USART_FLAG_TBE));
-    return ch;
-}
-#else
-/* retarget the C library printf function to the USART */
-int fputc(int ch, FILE *f)
-{
-    usart_data_transmit(EVAL_COM, (uint8_t)ch);
-    while(RESET == usart_flag_get(EVAL_COM, USART_FLAG_TBE));
-
-    return ch;
-}
-#endif /* GD_ECLIPSE_GCC */
-#endif
 
 #if(configCHECK_FOR_STACK_OVERFLOW)
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char* pcTaskName)

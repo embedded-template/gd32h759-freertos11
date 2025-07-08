@@ -2,6 +2,8 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "usart.h"
+
 #include "test.h"
 
 typedef struct task_info_t
@@ -19,4 +21,8 @@ typedef struct task_info_t
 #define TASK_param_test 100
 #define TASK_priority_test 3
 
+#define TASK_name_uart1 "debug"
+#define TASK_stack_depth_uart1 100
+#define TASK_param_uart1 100
+#define TASK_priority_uart1 3
 
